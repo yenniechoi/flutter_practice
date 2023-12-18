@@ -1,36 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:helloflutter/providers/books_provider.dart';
+import 'package:helloflutter/repository/books_repository.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import 'home.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-// StatelessWidget vs. StatefulWidget
-// 앱 상태 즉각 반영 : StatefulWidget + setState 메서드
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(   // 구글 Material 디자인 -- 전체 앱의 테마, 색깔, 화면구성, 라우팅, 초기화면연결 등을 지정.
-      title: '플러터 앱',
-      debugShowCheckedModeBanner: false, // debug 표시를 보지 않습니다.
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(   // Scaffold: 기본적인 Material 디자인 구조 정의. 뼈대.
-          appBar: AppBar(title: const Text("hello flutter")), // 앱 최상단 타이틀
-          body : const Column( // 위젯을 세로로 배치
-            mainAxisAlignment: MainAxisAlignment.spaceAround, // 주 방향(Column(세로), Row(가로))으로 위젯 간격이 서로 일정하게 벌려줌
-            children: [
-              Text("hello flutter!!!"),
-              //Icon(Icons.send, color: Colors.blueAccent)
+    return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        // MultiProvider를 통해 여러가지 Provider를 관리
+        home: MultiProvider(
+
+          // ChangeNotifierProvider 통해 변화에 대해 구독
+            providers: [
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => BooksProvider())
             ],
-          )
-      ),
-    );
+            //child: Home() // home.dart
+        ));
   }
 }
+
+
+
+// // StatelessWidget vs. StatefulWidget
+// // 앱 상태 즉각 반영 : StatefulWidget + setState 메서드
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(   // 구글 Material 디자인 -- 전체 앱의 테마, 색깔, 화면구성, 라우팅, 초기화면연결 등을 지정.
+//       title: '플러터 앱',
+//       debugShowCheckedModeBanner: false, // debug 표시를 보지 않습니다.
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: Scaffold(   // Scaffold: 기본적인 Material 디자인 구조 정의. 뼈대.
+//           appBar: AppBar(title: const Text("hello flutter")), // 앱 최상단 타이틀
+//           body : const Column( // 위젯을 세로로 배치
+//             mainAxisAlignment: MainAxisAlignment.spaceAround, // 주 방향(Column(세로), Row(가로))으로 위젯 간격이 서로 일정하게 벌려줌
+//             children: [
+//               Text("hello flutter!!!"),
+//               //Icon(Icons.send, color: Colors.blueAccent)
+//             ],
+//           )
+//       ),
+//     );
+//   }
+// }
 
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});
