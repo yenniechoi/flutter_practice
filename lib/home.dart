@@ -5,8 +5,8 @@ import 'package:helloflutter/views/list.dart';
 // class Home extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: ListWidget(),
+//     return const Scaffold(
+//       body: BookList(), // 리스트 화면 중개
 //     );
 //   }
 // }
