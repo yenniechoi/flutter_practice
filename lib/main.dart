@@ -15,10 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        title: 'Naver Book',
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         // ui
         //home: const BookList(), // 버전 1
         home: const AllList(), // 버전 2
