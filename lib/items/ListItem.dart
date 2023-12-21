@@ -3,7 +3,7 @@
 
 import 'dart:convert';
 
-class Book { // 리스트 조회 후 결과 담는 생성자
+class Book { // 리스트 조회 후 결과 담는 아이템
   String title;
   String link;
   String image;
@@ -27,6 +27,7 @@ class Book { // 리스트 조회 후 결과 담는 생성자
     this.description = '',
   });
 
+  // json 값 넣을때 쓰임
   // 들어오는 값이 null 인 경우를 대비
   factory Book.fromJson(Map<String, dynamic> json) => Book(
     title: json["title"] ?? '',
@@ -40,15 +41,4 @@ class Book { // 리스트 조회 후 결과 담는 생성자
     description: json["description"] ?? '',
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "link": link,
-    "image": image,
-    "author": author,
-    "discount": discount,
-    "publisher": publisher,
-    "pubdate": pubdate,
-    "isbn": isbn,
-    "description": description,
-  };
 }

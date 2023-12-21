@@ -4,11 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/book.dart';
+import '../items/ListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml2json/xml2json.dart';
 
-import '../models/detail.dart';
+import '../items/DetailItem.dart';
 
 
 /*
@@ -56,10 +56,10 @@ class BooksProvider {
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body); // 받아온 json 데이터를 디코딩
         // json 데이터에서 'items' 에 매칭된 배열을 담아야 함.
-        List<Book> bookInfo = (jsonData['items'] as List) // as 키워드로 명시적으로 타입 지정
+        List<Book> listInfo = (jsonData['items'] as List) // as 키워드로 명시적으로 타입 지정
             .map((item) => Book.fromJson(item)) // 리스트 각 항목을 item에 담아 Book 객체로 변환
             .toList(); // map 결과를 다시 리스트로 변환
-        return bookInfo;
+        return listInfo;
 
       } else {
         debugPrint('Error occurred. Please try again');
@@ -77,7 +77,7 @@ class BooksProvider {
 
 
 /*
-* <?xml version="1.0" encoding="UTF-8"?>
+*
 <rss version="2.0">
     <channel>
         <title>Naver Open API - book_adv ::&apos;&apos;</title>
@@ -112,7 +112,7 @@ class BooksProvider {
 class BookDetailProvider {
 
   static Future <Detail> getBookInfo(String isbn) async {
-    print(isbn);
+    //print(isbn);
     String baseUrl =
         "https://openapi.naver.com/v1/search/book_adv.xml?d_isbn=$isbn";
 
@@ -136,7 +136,7 @@ class BookDetailProvider {
         xml2Json.parse(xmlData);
         var jsonString = xml2Json.toParker();
         var jsonData = jsonDecode(jsonString);
-        debugPrint('jsonData: $jsonData');
+        //debugPrint('jsonData: $jsonData');
 
         // Json 데이터를 저장
         Map<String, dynamic> itemData = jsonData['rss']['channel']['item'];

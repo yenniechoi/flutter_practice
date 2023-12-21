@@ -24,6 +24,7 @@ class Detail { // 디테일 조회 후 결과 담는 생성자
     this.detailDescription = '',
   });
 
+  // json 파싱
   // 들어오는 값이 null 인 경우를 대비
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
     detailTitle: json["title"] ?? '',

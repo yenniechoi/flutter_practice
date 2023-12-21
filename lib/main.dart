@@ -1,34 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:helloflutter/pages/bookDetail/Detail.dart';
+import 'package:helloflutter/pages/bookList/List.dart';
+
 
 import 'package:helloflutter/views/bookList.dart';
 import 'package:helloflutter/views/list.dart';
+import 'package:get/get.dart';
 
 
 void main() {
   runApp(const MyApp());
 }
 
+/// stateless 로 구현해 GetX 사용한 버전
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Naver Book',
-        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-        // ui
-        //home: const BookList(), // 버전 1
-        home: const AllList(), // 버전 2
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Naver Book',
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+      initialRoute: '/', // 리스트로 화면 시작
 
-    ); // home.dart
+      // 경로 이름 설정
+      getPages: [
+        GetPage(name: '/', page: () => BookAllList()),
+        // 디테일 페이지엔 해당 도서의 고유번호와 같이 이동
+        GetPage(name: '/detail/:isbn', page:  () => BookInfo())
+      ],
+
+    );
 
   }
 }
 
 
+/// stateful 로 구현한 버전
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         title: 'Naver Book',
+//         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+//         // ui
+//         //home: const BookList(), // 버전 1 -- 한 페이지에 모든 기능 구현
+//         home: const AllList(), // 버전 2 -- 파일을 나눠 기능 구현
+//
+//     );
+//
+//   }
+// }
 
 
+
+/// hello flutter  실습
 
 // // StatelessWidget vs. StatefulWidget
 // // 앱 상태 즉각 반영 : StatefulWidget + setState 메서드
@@ -58,68 +89,3 @@ class MyApp extends StatelessWidget {
 //   }
 // }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//         useMaterial3: true,
-//       ),
-//       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-//     );
-//   }
-// }
-//
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-//
-//   final String title;
-//
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _counter = 0;
-//
-//   void _incrementCounter() {
-//     setState(() {
-//       _counter++;
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         title: Text(widget.title),
-//       ),
-//       body: Center(
-//         // Center is a layout widget. It takes a single child and positions it
-//         // in the middle of the parent.
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             const Text(
-//               'You have pushed the button this many times:',
-//             ),
-//             Text(
-//               '$_counter',
-//               style: Theme.of(context).textTheme.headlineMedium,
-//             ),
-//           ],
-//         ),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: _incrementCounter,
-//         tooltip: 'Increment',
-//         child: const Icon(Icons.add),
-//       ), // This trailing comma makes auto-formatting nicer for build methods.
-//     );
-//   }
-// }

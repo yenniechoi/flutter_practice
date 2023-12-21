@@ -1,16 +1,15 @@
 // 리스트에서 책을 누르면 나오는 책 상세페이지
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../models/detail.dart';
-import '../providers/books_provider.dart';
+import '../items/DetailItem.dart';
+import '../api/ApiProvider.dart';
 
 
 class BookDetail extends StatelessWidget {
-  final String isbn;
-
   const BookDetail({Key? key, required this.isbn}) : super(key: key);
+  // 리스트에서 인자값으로 받아온 책 고유번호 --> 디테일 api 호출할 때 쓰임
+  final String isbn;
 
 
   @override
@@ -27,7 +26,8 @@ class BookDetail extends StatelessWidget {
       ),
       body: SingleChildScrollView( // Column 위젯이 화면을 넘어서 렌더링되는걸 방지.
         child: FutureBuilder<Detail>( // 비동기 통신. 서버에서 데이터를 모두 받아오기 전에 화면을 그려줄 수 있음.
-          future: BookDetailProvider.getBookInfo(isbn), // 디테일 api 호출
+          /// 디테일 api 호출
+          future: BookDetailProvider.getBookInfo(isbn),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) { // Future 실행 중
               return const CircularProgressIndicator(); // 로딩 표시
@@ -35,7 +35,7 @@ class BookDetail extends StatelessWidget {
               return Text('에러: ${snapshot.error}');
             } else
             if (!snapshot.hasData) { // 에러는 없지만 데이터가 아직 없는 경우
-              return Text('데이터 오는 중...'); // 플레이스 홀더 표시
+              return const Text('데이터 오는 중...'); // 플레이스 홀더 표시
             } else { // Future가 완료되고 데이터가 있는 경우 데이터를 표시합니다.
               Detail detail = snapshot.data!;
               return Column(
