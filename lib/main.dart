@@ -1,42 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:helloflutter/pages/bookDetail/Detail.dart';
 import 'package:helloflutter/pages/bookList/List.dart';
+import 'package:helloflutter/theme/ThemeController.dart';
+import 'package:helloflutter/theme/book_themes.dart';
 
-
-import 'package:helloflutter/views/bookList.dart';
-import 'package:helloflutter/views/list.dart';
 import 'package:get/get.dart';
 
-
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-/// stateless 로 구현해 GetX 사용한 버전
+/// GetX 사용해 stateless 로 구현한 버전
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  final ThemeController _themeController = ThemeController(); // 테마 변경 관리하는 컨트롤 의존성 주입
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Naver Book',
-      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-      initialRoute: '/', // 리스트로 화면 시작
+    return Obx(() => GetMaterialApp(
+          debugShowCheckedModeBanner: false, // 상단에 뜨는 디버그 띠 없애기
 
-      // 경로 이름 설정
-      getPages: [
-        GetPage(name: '/', page: () => BookAllList()),
-        // 디테일 페이지엔 해당 도서의 고유번호와 같이 이동
-        GetPage(name: '/detail/:isbn', page:  () => BookInfo())
-      ],
+          /// 테마 변경
+          // 앱을 처음 구동할 때에는 시스템 설정을 따라 테마 결정
+          // themeMode: ThemeMode.system, // Theme Mode 설정 .system : 시스템에 따라 변경됨을 의미
+          // 자체적으로 테마를 바꾸고 싶어서 아이콘 생성
+          theme: _themeController.isDarkMode.value ? BookThemes.darkTheme : BookThemes.lightTheme,
 
-    );
+          /// 경로 설정
+          initialRoute: '/', // 리스트로 화면 시작
+          getPages: [ // 경로 이름 설정
+            GetPage(name: '/', page: () => BookAllList()),
+            GetPage(name: '/detail/:isbn', page: () => BookInfo()) // 디테일 페이지엔 해당 도서의 고유번호와 같이 이동
+          ],
 
+          /// 경로가 이동될 때, body 영역 안에서만 바뀌게 하기
+          defaultTransition: Transition.cupertino, // body 컨텐츠만 바뀌기
+          defaultGlobalState: true, // 공통 AppBar 설정 유지하기
+
+          /// 공통 AppBar 설정
+          builder: (context, child) {
+            return Scaffold(
+              appBar: AppBar(
+                forceMaterialTransparency: true, // 스크롤 시 색상 변경 안되게.
+                title: const Text(
+                  'Naver Book',
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
+                ),
+
+                /// 테마 변경 아이콘
+                actions: [
+                  IconButton(
+                    icon: Icon(_themeController.isDarkMode.value
+                        ? Icons.light_mode_rounded
+                        : Icons.nightlight),
+                    onPressed: _themeController.toggleTheme,
+                  ),
+                ],
+              ),
+              body: child,
+            );
+          },
+        ));
   }
 }
-
 
 /// stateful 로 구현한 버전
 
@@ -56,8 +86,6 @@ class MyApp extends StatelessWidget {
 //
 //   }
 // }
-
-
 
 /// hello flutter  실습
 
@@ -88,4 +116,3 @@ class MyApp extends StatelessWidget {
 //     );
 //   }
 // }
-

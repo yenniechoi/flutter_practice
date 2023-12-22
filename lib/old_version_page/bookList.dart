@@ -1,16 +1,17 @@
 
 
-/*
-* [ 버전 2 ]
-* Model, Provider, Views 로 나눠 구현한 버전.
-*
-* */
-
 import 'package:flutter/material.dart';
 import 'package:helloflutter/items/ListItem.dart';
 
 import '../api/ApiProvider.dart';
 import 'bookDetail.dart';
+
+/// GetX 사용하지 않은 버전
+/*
+* [ 버전 2 ] (사용 안함)
+* Model, Provider, Views 로 나눠 구현한 버전.
+*
+* */
 
 class AllList extends StatefulWidget {
   const AllList({super.key});

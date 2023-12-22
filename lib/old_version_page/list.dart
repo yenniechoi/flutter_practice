@@ -1,4 +1,13 @@
 
+
+
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+/// GetX 사용하지 않은 버전
 /*
 * [ 버전 1 ] (현재 사용 안함)
 *  api 호출부터 show 까지 한 페이지에서 해결.
@@ -6,12 +15,6 @@
 *  model 안쓰고 json에서 필요값 추출해서 보여주는 로직
 *
 * */
-
-
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 // main.dart 에서 바로 넘어온다.
 // 앱 상태 즉각 반영 : StatefulWidget + setState 메서드

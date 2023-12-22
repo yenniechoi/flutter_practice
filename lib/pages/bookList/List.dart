@@ -16,43 +16,30 @@ GetX와 Controller 로 상태를 관리하는 방식으로 변경
 반응형 상태 관리 : 데이터가 변화가 있을 때만 재렌더링
  */
 
+/// 첫 시작 화면, 네이버 도서 리스트 검색 결과 창
+
 class BookAllList extends StatelessWidget {
   BookAllList({super.key});
 
   // 상태관리 할 컨트롤러 의존성 주입
   // Get.put()을 사용하여 클래스를 인스턴스화하여 모든 "child'에서 사용가능하게 합니다.
   final ListController controller = Get.put(ListController());
-  TextEditingController searchController = TextEditingController(); // 검색창 입력내용 controller. 입력값 가져올 때 사용
-
 
 
   // 전체 뷰 --------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        forceMaterialTransparency: true, // 리스트 스트롤 할 때 색깔 변하지 않게 하는거.
-        title: const Text(
-          'Naver Book',
-          style: TextStyle(
-            color: Colors.lime,
-            fontSize: 28,
-          ),
-        ),
-      ),
-      body: Center (
-        child: Column(
-          children: [
-            buildSearchBar(), // 검색창
-            buildSearchResults() // 검색 결과
-          ],
-        ),
+    return Center(
+      child: Column(
+        children: [
+          buildSearchBar(), // 검색창
+          buildSearchResults(), // 검색 결과
+        ],
       ),
     );
   }
+// 전체 뷰 --------------------------------------------------------------------
 
-// 전체 뷰 ---------------------------------------------------------------------------
 
 /*
  *
@@ -65,33 +52,20 @@ class BookAllList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
       child: TextFormField( // TextField 를 포함하고 있는 FormField
-        controller: searchController,
-        onChanged: (text) { controller.query.value = text;}, // 검색창 입력값이 변할때마다 실시간으로 api 호출
+        controller: controller.searchController,
+        onChanged: (text) { controller.updateSearchQuery(text); }, // 검색창 입력값이 변할때마다 실시간으로 api 호출
 
         // 검색창 디자인
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.search, color: Colors.lime, size: 30),
+          prefixIcon: const Icon(Icons.search, size: 30),
           suffixIcon: IconButton( // 입력창 뒤에 오는 X 아이콘
-            onPressed: () =>
-            {
-              searchController.clear(), // 누르면 입력창에 입력한 값 사라짐
-              controller.query.value = '',
-            },
-            icon: const Icon(Icons.clear, color: Colors.black12),
+            onPressed: () => { controller.clearSearchQuery() }, // 검색창 초기화
+            icon: const Icon(Icons.clear),
           ),
-          //filled: true, // 텍스트 입력필드 배경 바꾸기 위해 true
-          //fillColor: Colors.white,
           hintText: '책 제목 / 저자',
-          hintStyle: const TextStyle(color: Colors.black12),
           contentPadding: const EdgeInsets.symmetric( // 입력창 내용 대칭 정렬
             vertical: 8,
             horizontal: 16,
-          ),
-            enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12),
-          ),
-          focusedBorder: const UnderlineInputBorder( // 입력창이 포커스될 경우 색변경
-            borderSide: BorderSide(color: Colors.lime),
           ),
         ),
       ),
@@ -113,13 +87,7 @@ class BookAllList extends StatelessWidget {
               itemCount: controller.books.length, // 배열에 담긴 값만큼 반복
               itemBuilder: (context, index) {
                 return InkWell( // 탭 감지 (각 카드 영역)
-                  onTap: () { // 리스트에서 책 누르면 디테일 페이지로 이동
-                    Get.toNamed('/detail/${controller.books[index].isbn}');
-                    /* arguments 나 파라메터는 무조건 '' 로 감싸져서 String 으로 들어가야 한다.
-                    * 그러기 힘들 경우 ${} 로 묶어서 처리하기~
-                    * arguments 에는 ${} 못씀.
-                     */
-                  },
+                  onTap: () {controller.moveToDetail(index);}, // 리스트에서 카드 누르면 디테일 페이지로 이동
                   child: buildBookCard(controller.books[index]), // 검색 결과를 카드로 보여주는 부분
                 );
               },
@@ -141,14 +109,12 @@ class BookAllList extends StatelessWidget {
 
   Widget buildBookCard(Book book) {
     return Card( // 카드 형태
-      color: Colors.white,
-      surfaceTintColor: Colors.white, // 이거까지 해줘야 흰색으로 나옴
-      elevation: 2,
-      shadowColor: Colors.grey,
+      elevation: 3,
       margin: const EdgeInsets.symmetric( // 대칭적 여백 지정
         horizontal: 15.0, // 수평 (왼오)
         vertical: 10.0, // 수직 (위아래)
       ),
+
       child: Padding(
         padding: const EdgeInsets.all(8.0), // 전체 여백 지정
         child:
@@ -158,23 +124,23 @@ class BookAllList extends StatelessWidget {
             SizedBox(
               height: 100,
               width: 100,
-              child: Image.network(book.image),
+              child: Image.network(book.image), // 책 이미지
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min, // 포함된 자식 콘텐츠의 크기만큼 차지
+                  crossAxisAlignment: CrossAxisAlignment.start, // 가로축 기준 상단 정렬
                   children: [
                     Text(
-                      book.title,
+                      book.title,  // 책 제목
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
-                    Text(book.author),
+                    Text(book.author), // 책 저자
                   ],
                 ),
               ),

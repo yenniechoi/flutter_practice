@@ -1,11 +1,12 @@
-// 리스트에서 책을 누르면 나오는 책 상세페이지
+
 
 import 'package:flutter/material.dart';
 
 import '../items/DetailItem.dart';
 import '../api/ApiProvider.dart';
 
-
+/// GetX 사용하지 않은 버전
+// 리스트에서 책을 누르면 나오는 책 상세페이지
 class BookDetail extends StatelessWidget {
   const BookDetail({Key? key, required this.isbn}) : super(key: key);
   // 리스트에서 인자값으로 받아온 책 고유번호 --> 디테일 api 호출할 때 쓰임
